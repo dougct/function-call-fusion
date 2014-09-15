@@ -1,0 +1,22 @@
+##-- TEST.CountCandFusion.report - Report desc for PredOpts tests - perl -*-==##
+#
+# This file defines a report to be generated for the CountCandFusion pass.
+#
+##===----------------------------------------------------------------------===##
+
+# Sort by name
+$SortCol = 1;
+$TrimRepeatedPrefix = 1;
+
+# These are the columns for the report.  The first entry is the header for the
+# column, the second is the regex to use to match the value.  Empty list create
+# seperators, and closures may be put in for custom processing.
+(
+ ["Name" , '\'([^\']+)\' Program'],
+ [],
+ ["CandidatesForFusion", '([0-9]+).*Candidates for Function Fusion.'],
+ [],
+ ["NumberOfBranches", '([0-9]+).*Number of Branches.'],
+ [],
+);
+
