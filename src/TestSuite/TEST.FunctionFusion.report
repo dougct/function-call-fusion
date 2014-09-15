@@ -1,4 +1,4 @@
-##TEST.Hello.report - Report desc for Hello tests - perl -*-==##
+## TEST.FunctionFusion.report ---------- Report description ------- perl -*-==##
 #
 # This file defines a report to be generated for the Hello test.
 #
@@ -12,12 +12,9 @@ $TrimRepeatedPrefix = 1;
 # column, the second is the regex to use to match the value.  Empty list create
 # seperators, and closures may be put in for custom processing.
 (
-# Name
  ["Name" , '\'([^\']+)\' Program'],
  [], 
  ["CandidatesForFunctionFusion", '([0-9]+).*Candidates for function fusion.'],
- [],
- ["IsAlive", '([0-9]+).*The pass ran fine.'],
  [],
  ["NumberOfFunctions", '([0-9]+).*Number of functions in the program.'],
  [],
@@ -25,4 +22,4 @@ $TrimRepeatedPrefix = 1;
  # Times
  ["TOTAL", '([0-9.]+) \([^)]+\)[ 0-9A-Za-z]+TOTAL'],
  []
- );
+);
