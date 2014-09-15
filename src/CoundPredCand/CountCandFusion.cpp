@@ -1,4 +1,4 @@
-//===-- CountPredCandidates.cpp - Counts Candidates for Fusion -------===//
+//===-- CountPredCandidates.cpp ------ Counts Candidates for Fusion -------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file implements a counter of candidates for branch Fusion.
+// This file implements a counter of candidates for function call fusion.
 //
 //===----------------------------------------------------------------------===//
 
