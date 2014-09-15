@@ -279,111 +279,62 @@ namespace {
             continue;
 
           // We don't evaluate 'invoke' terminated basic blocks.
-          InvokeInst *In = NULL;
-          In = dyn_cast<InvokeInst>(BBTerm);
-          if (In != NULL) {
-            errs() << "NULL, motherfucker!";
+          if (dyn_cast<InvokeInst>(BBTerm))
             continue;
-          } 
-
 
           // Get the successors of the block we're iterating over.
           BasicBlock *oldTrueBB = BBTerm->getSuccessor(0);
           BasicBlock *oldFalseBB = BBTerm->getSuccessor(1);
-
-          //getCandidates(TrueBBFunctions, oldTrueBB);
-          //getCandidates(FalseBBFunctions, oldFalseBB);
-
 
           // Get the functions that we can optimize.
           getFunctionsToOptimize(TrueBBFunctions, FalseBBFunctions,
                                  oldTrueBB, oldFalseBB);
 
 
-
-          errs() << "Candidates: " << Worklist.size() << "\n";
           for (size_t i = 0; i < Worklist.size() && !changed; i++) {
             Function *f = Worklist[i];
             // Apply the optimization to the functions found above.
-            errs() << f->getName() << "\n";
             BasicBlock *newTrueBB = splitBB(oldTrueBB, f);
             assert(newTrueBB != NULL && "Couldn't find the split point.");
             BasicBlock *newFalseBB = splitBB(oldFalseBB, f);
             assert(newFalseBB != NULL && "Couldn't find the split point.");
 
-            //if (newTrueBB == NULL || newFalseBB == NULL)
-            //  changed = false;
-
             if (newTrueBB && newFalseBB)
               changed = true;
-
-            
 
             // Create the joint BB and add its successors.
             BasicBlock *jointBB = createJointBB (F);
             
             IRBuilder<> Builder(jointBB);
             
-            
             // Make the BBs that were split point the joint BB.
             insertUncondBranch (oldTrueBB, jointBB);
             insertUncondBranch (oldFalseBB, jointBB);
             
-            errs() << "JOINT: " << *jointBB << "\n";
-            
-
-            //jointBB->getInstList().insert(jointBB->end(), B);
-
             // Create a new function copying the prototype of the candidate function.
             Value *newF = createFunction (F.getParent(), f);
 
-
-
+            // Make some adjustments to the dominance frontier
+            // to include the newly create basic block.
             DT_->addNewBlock(jointBB, BB);
-
             DT_->changeImmediateDominator(newFalseBB, jointBB);
             DT_->changeImmediateDominator(newTrueBB, jointBB);
-            //Builder.SetInsertPoint(B);
             fixDominators(oldTrueBB, oldFalseBB, jointBB, Builder);
-            errs() << "XXXXXXXXXXXXXXX\n";
-            errs() << F.getName();
             fixDominators(oldFalseBB, oldTrueBB, jointBB, Builder);
-
-
 
             size_t args = f->getArgumentList().size();
             std::vector<Value*> FArgs = createPHIArgs(args, jointBB, newTrueBB, Builder);
             assert(!FArgs.empty() && "There has to be an argument!");
 
-            
-            errs() << "Progress!\n";
             // Create function call
             std::vector<Value*> newArgs(FArgs.begin(), FArgs.end());
-            
-
-            errs() << "FFFF: " << f->isDeclaration() << *f << "\n";
-
-            //Builder.SetInsertPoint(B);
-            //Builder.SetInsertPoint(B);
             CallInst* NF = Builder.CreateCall(newF, newArgs, "");
 
             BranchInst *B = createCondBr(jointBB, BBTerm, newTrueBB, newFalseBB, Builder);
-            if (B == NULL)
-              errs() << "BBTERM: " << *BBTerm << "\n";
-            assert(B != NULL && "oops!");
-
+            assert(B != NULL && "Couldn't create the branch instruction.");
 
             addPHIOperands(FArgs, newTrueBB, newFalseBB, oldTrueBB, oldFalseBB);
-
-
-
             cleanUpCalls (NF, newTrueBB, newFalseBB);
-
-            
-
-            errs() << "Got here!\n";
-            //F.dump();
-
           }
 
           Worklist.clear();
@@ -394,8 +345,6 @@ namespace {
             break;
         }
       } while (changed);
-      //F.dump();
-      //F.viewCFG();
       isAlive++;
       return true;
     }
