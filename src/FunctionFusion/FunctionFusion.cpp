@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file implements function fusion.
+// This file implements function call fusion.
 //
 //===----------------------------------------------------------------------===//
 
@@ -28,15 +28,15 @@
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
 #include "llvm/Pass.h"
 
+#include <algorithm>
+#include <iterator>
 #include <string>
 #include <vector>
-#include <iterator>
-#include <algorithm>
+
 
 using namespace llvm;
 
 STATISTIC(CandidatesForFunctionFusion, "Candidates for function fusion.");
-STATISTIC(isAlive, "The pass ran fine.");
 STATISTIC(NumberOfFunctions, "Number of functions in the program.");
 
 namespace {
@@ -69,19 +69,19 @@ namespace {
     }
 
 
+    // Split a basic block at a specific point.
     BasicBlock* splitBB(BasicBlock *BB, Function* splitPoint) {
       for (auto I = BB->begin(), E = BB->end(); I != E; ++I) {
-        if (CallInst *C = dyn_cast<CallInst>(I)) {
-          errs () << C->getCalledFunction() << " vs " << splitPoint << "\n";
-          if (C->getCalledFunction() == splitPoint) {
-            errs() << "Spliting block!\n";
+        if (CallInst *C = dyn_cast<CallInst>(I))
+          if (C->getCalledFunction() == splitPoint)
             return SplitBlock(BB, C, this);
-          }
-        }
       }
       return NULL;
     }
 
+    // Make the set intersection of the functions called in both
+    // successors of a branch. This intersection gives us the
+    // candidates for function fusion.
     void getFunctionsToOptimize (std::vector<Function*> &V1, 
                                  std::vector<Function*> &V2, 
                                  BasicBlock *TBB, 
@@ -103,77 +103,59 @@ namespace {
       CandidatesForFunctionFusion += Worklist.size();
     }
 
+    // Create an unconditional branch from a source BB to a destination BB.
     void insertUncondBranch (BasicBlock *srcBB, BasicBlock *dstBB) {
-      // Create an unconditional branch from a source BB to a destination BB.
-      errs() << "Creating Branch to " << dstBB->getName() << "\n";
       TerminatorInst *srcBBTerm = srcBB->getTerminator();
       assert (srcBBTerm->getNumSuccessors() == 1 && "Wrong number of succs");
-      if (BranchInst *Br = dyn_cast<BranchInst>(srcBBTerm)) {
+      if (BranchInst *Br = dyn_cast<BranchInst>(srcBBTerm))
         Br->setSuccessor(0, dstBB);
-      }
-      errs() << *srcBB;
+      assert(Br->getSuccessor(0) == dstBB && "Couldn't set the successor.");
     }
 
+    // Create a function call with the same type as the original function.
     Value *createFunction (Module *M, Function *F) {
       Function::ArgumentListType& Args = F->getArgumentList();
       std::vector<Type*> Params;
-      for (auto b = Args.begin(), e = Args.end(); b != e; ++b) {
+      for (auto b = Args.begin(), e = Args.end(); b != e; ++b)
         Params.push_back(b->getType());
-      }
       
       return M->getOrInsertFunction(F->getName(), F->getFunctionType(), F->getAttributes());
     }
 
-
-
-    BasicBlock *createJointBB (Function &F) {
-      // Create joint BB
+    // Create a basic block that will contain the merged function call.
+    inline BasicBlock *createJointBB (Function &F) {
       LLVMContext& Context = F.getParent()->getContext();
-      BasicBlock *jointBB = BasicBlock::Create (Context, "JointBB", &F);
-      //F.getBasicBlockList().push_back(jointBB);
-      return jointBB;
+      return BasicBlock::Create (Context, "JointBB", &F);
     }
 
     BranchInst *createCondBr (BasicBlock* jointBB, TerminatorInst *BBTerm, 
-                               BasicBlock *Succ1, BasicBlock *Succ2, IRBuilder<> &Builder) {
+                               BasicBlock *Succ1, BasicBlock *Succ2, 
+                               IRBuilder<> &Builder) {
       // Insert branch into joint BB
-      errs() << *jointBB;
-      //IRBuilder<> Builder(jointBB);
-      if (BranchInst *Br = dyn_cast<BranchInst>(BBTerm)) {
-        errs() << "Creating Cond...\n";
-        // We do this to silence a warning because we don't use
-        // the return of CreateCondBr.
+      if (BranchInst *Br = dyn_cast<BranchInst>(BBTerm))
         return Builder.CreateCondBr(Br->getCondition(), Succ1, Succ2);
-        errs() << *jointBB;
-      }
 
       return NULL;
     }
 
-
+    // Create the arguments of the new function. These arguments are a PHI
+    // node with the arguments of old function that come from different
+    // basic blocks, or globals, or 'alloca' instructions.
     std::vector<Value*> createPHIArgs (size_t nrArgs, BasicBlock *jointBB, 
-                                         BasicBlock *BB, IRBuilder<> &Builder) {
+                                       BasicBlock *BB, IRBuilder<> &Builder) {
       // When we split a basic block, we make sure that the
       // first instruction of the second half of the split block
       // is a function call. What we want to do is to create PHINodes
       // with arguments that have the same types as the types of the
       // function parameters.
       std::vector<Value*> Args;
-      //IRBuilder<> Builder(jointBB->getFirstInsertionPt());
-      //Builder.SetInsertPoint(jointBB->getFirstInsertionPt());
-      //errs() << "TERMINATOR " << *jointBB->getTerminator() << "\n";
-      errs() << "JOINT ";
-      errs() << *jointBB;
-      
       if (CallInst *C = dyn_cast<CallInst>(BB->getFirstNonPHI())) {
         for (size_t i = 0; i < nrArgs; i++) {
-          if (GlobalValue *GV = dyn_cast<GlobalValue>(C->getArgOperand(i))) {
+          if (GlobalValue *GV = dyn_cast<GlobalValue>(C->getArgOperand(i)))
             Args.push_back(GV);
-            errs() << "GVGVGVGVG\n";
-          } else if (AllocaInst *A = dyn_cast<AllocaInst>(C->getArgOperand(i))) {
+          else if (AllocaInst *A = dyn_cast<AllocaInst>(C->getArgOperand(i)))
             Args.push_back(A);
-            errs() << "ALLOCA\n";
-          } else {
+          else {
             Type *FType = C->getArgOperand(i)->getType();
             Args.push_back(Builder.CreatePHI(FType, nrArgs));
           }
@@ -182,24 +164,18 @@ namespace {
       return Args;
     }
 
+    // Add the operands of the newly created PHI function.
     void addPHIOperands (std::vector<Value*> &Args, BasicBlock *newTrueBB,
                         BasicBlock *newFalseBB, BasicBlock *oldTrueBB,
                         BasicBlock *oldFalseBB) {
-
       CallInst *CT = dyn_cast<CallInst>(newTrueBB->getFirstNonPHI());
       CallInst *CF = dyn_cast<CallInst>(newFalseBB->getFirstNonPHI());
       assert((CT != NULL && CF != NULL) && "No call at BB's beginning!");
-      errs() << "F ";
-      //oldTrueBB->getParent()->dump();
-      std::vector<int> toRemove;
       for (size_t j = 0; j < Args.size(); j++) {
-        errs() << "args? " << Args.size() << "\n";
-          if (PHINode *Phi = dyn_cast<PHINode>(Args[j])) {
-            errs() << "CT " << *CT->getArgOperand(j) << "\n";
-            errs() << "CF " << *CF->getArgOperand(j) << "\n";
-            Phi->addIncoming(CT->getArgOperand(j), oldTrueBB);
-            Phi->addIncoming(CF->getArgOperand(j), oldFalseBB);
-          }
+        if (PHINode *Phi = dyn_cast<PHINode>(Args[j])) {
+          Phi->addIncoming(CT->getArgOperand(j), oldTrueBB);
+          Phi->addIncoming(CF->getArgOperand(j), oldFalseBB);
+        }
       }
 
       for (size_t i = 0; i < Args.size(); i++) {
@@ -207,16 +183,10 @@ namespace {
           if (Phi->getNumOperands() == 0)
             Phi->eraseFromParent();
         }
-        //PHIs[toRemove[i]]->eraseFromParent();
-        //PHIs.erase(PHIs.begin() + toRemove[i]);
-      }
-
-      for (size_t j = 0; j < Args.size(); j++) {
-        errs () << "PHIIIII: " << *Args[j] << "\n"; 
-
       }
     }
 
+    // Remove the old function calls.
     void cleanUpCalls (CallInst *F, BasicBlock *TBB, BasicBlock *FBB) {
       CallInst *CT = dyn_cast<CallInst>(TBB->getFirstNonPHI());
       CallInst *CF = dyn_cast<CallInst>(FBB->getFirstNonPHI());
@@ -259,40 +229,19 @@ namespace {
 
 
     void fixDominators (BasicBlock *Pred1, BasicBlock *Pred2, BasicBlock *Succ, IRBuilder<> &Builder) {
-      //DT_->verifyDomTree();
-      errs() << "SUCC " << Succ->getParent()->getName(); 
-      for (auto b = Succ->begin(), e = Succ->end(); b != e; ++b)
-        errs() << *b << "\n";
-      //IRBuilder<> Builder(Succ);
-
-      //Builder.SetInsertPoint(Succ->getFirstInsertionPt());
-      //Builder.SetInsertPoint(Succ->getFirstInsertionPt());
       for (auto I = Pred1->begin(), E = Pred1->end(); I != E; ++I) {
         if (!I->isUsedOutsideOfBlock(Pred1))
           continue;
 
         // We'll always have two arguments: an instruction and an Undef value.
-        errs() << "PHI UNDEF: " << *I->getType() <<  "  " << *I << "\n";
-        //PHINode *Phi = NULL;
-        //Value *Undef = NULL;
-        //if (ExtractValueInst *EVI = dyn_cast<ExtractValueInst>(I)) {
-        //  errs() << "PHI TYPE: " << *EVI->getOperand(0)->getType() <<  "  " << *I << "\n";
-        //  Phi = Builder.CreatePHI(EVI->getOperand(0)->getType(), 2);
-        //  Undef = UndefValue::get(EVI->getOperand(0)->getType());
-        //  Phi->addIncoming(EVI, Pred1);
-        //} else {
-          PHINode *Phi = Builder.CreatePHI(I->getType(), 2);
-          Value *Undef = UndefValue::get(I->getType());
-          Phi->addIncoming(I, Pred1);
-        //}
+        PHINode *Phi = Builder.CreatePHI(I->getType(), 2);
+        Value *Undef = UndefValue::get(I->getType());
+        Phi->addIncoming(I, Pred1);
         Phi->addIncoming(Undef, Pred2);
         
         for (auto UI = I->use_begin(), UE = I->use_end(); UI != UE; ++UI) {
           if (Instruction *II = dyn_cast<Instruction>(*UI)) {
             if (Phi->getParent() != II->getParent() && DT_->dominates(Phi, II)) {
-              errs() << "Phi's parent " << Phi->getParent()->getName() << " II's parent " << II->getParent()->getName() << "\n";
-              errs() << "Replacing " << *I << " with " << *Phi << " in " << *II << "\n";
-
               II->replaceUsesOfWith(I, Phi);
               replaceUsesOfWithAfter(I, Phi, Succ);
             }
@@ -301,14 +250,8 @@ namespace {
       }
     }
 
-    //inline void changeIdom (BasicBlock *BB, BasicBlock *Idom) {
-    //  DT_->changeImmediateDominator(BB, Idom);
-   // }
-    
+
     virtual bool runOnFunction(Function &F) {
-      //if (F.getName() == "main")
-      //  return true;
-      //F.viewCFG();
       NumberOfFunctions++;
       DT_ = &getAnalysis<DominatorTree>();
       DF_ = &getAnalysis<DominanceFrontier>();
@@ -320,7 +263,7 @@ namespace {
       // This strategy avoids invalidating iterators.
       for (auto bgn = F.begin(), end = F.end(); bgn != end; ++bgn)
         BBList.push_back(bgn);
-      //std::copy(F.begin(), F.end(), BBList.begin());
+
       bool changed = false;
       do {
 
@@ -329,7 +272,6 @@ namespace {
           // Handle newly created BBs.
           if (BB->getTerminator() == NULL)
             continue;
-
 
           // We only analyze blocks that have two successors.
           TerminatorInst *BBTerm = BB->getTerminator();
