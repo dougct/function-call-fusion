@@ -1,14 +1,14 @@
-##===- TEST.Hello.Makefile -------------------------*- Makefile -*-===##
+##===- TEST.FunctionFusion.Makefile-------------------------*- Makefile -*-===##
 #
 # This recursively traverses the programs, and runs the range-analysis pass
 # on each *.linked.rbc bytecode file with -stats set so that it is possible to
 # determine which Hello are being analysed in which programs.
 # 
 # Usage: 
-#     make TEST=Hello summary (short summary)
-#     make TEST=Hello (detailed list with time passes, etc.)
-#     make TEST=Hello report
-#     make TEST=Hello report.html
+#     make TEST=FunctionFusion summary (short summary)
+#     make TEST=FunctionFusion (detailed list with time passes, etc.)
+#     make TEST=FunctionFusion report
+#     make TEST=FunctionFusion report.html
 #
 ##===----------------------------------------------------------------------===##
 
