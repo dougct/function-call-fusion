@@ -107,9 +107,10 @@ namespace {
     void insertUncondBranch (BasicBlock *srcBB, BasicBlock *dstBB) {
       TerminatorInst *srcBBTerm = srcBB->getTerminator();
       assert (srcBBTerm->getNumSuccessors() == 1 && "Wrong number of succs");
-      if (BranchInst *Br = dyn_cast<BranchInst>(srcBBTerm))
+      BranchInst *Br = NULL;
+      if ((Br = dyn_cast<BranchInst>(srcBBTerm)))
         Br->setSuccessor(0, dstBB);
-      assert(Br->getSuccessor(0) == dstBB && "Couldn't set the successor.");
+      assert((Br && Br->getSuccessor(0) == dstBB) && "Couldn't set the succ.");
     }
 
     // Create a function call with the same type as the original function.
@@ -345,7 +346,6 @@ namespace {
             break;
         }
       } while (changed);
-      isAlive++;
       return true;
     }
 
