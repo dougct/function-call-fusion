@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ActiveLayerIndex</key>
+	<integer>0</integer>
+	<key>ApplicationVersion</key>
+	<array>
+		<string>com.omnigroup.OmniGrafflePro</string>
+		<string>139.17.0.185490</string>
+	</array>
+	<key>AutoAdjust</key>
+	<true/>
+	<key>BackgroundGraphic</key>
+	<dict>
+		<key>Bounds</key>
+		<string>{{0, 0}, {559, 783}}</string>
+		<key>Class</key>
+		<string>SolidGraphic</string>
+		<key>ID</key>
+		<integer>2</integer>
+		<key>Style</key>
+		<dict>
+			<key>shadow</key>
+			<dict>
+				<key>Draws</key>
+				<string>NO</string>
+			</dict>
+			<key>stroke</key>
+			<dict>
+				<key>Draws</key>
+				<string>NO</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>BaseZoom</key>
+	<integer>0</integer>
+	<key>CanvasOrigin</key>
+	<string>{0, 0}</string>
+	<key>ColumnAlign</key>
+	<integer>1</integer>
+	<key>ColumnSpacing</key>
+	<real>36</real>
+	<key>CreationDate</key>
+	<string>2015-04-04 23:34:39 +0000</string>
+	<key>Creator</key>
+	<string>Fernando Magno Quintao Pereira</string>
+	<key>DisplayScale</key>
+	<string>1.000 cm = 1.000 cm</string>
+	<key>GraphDocumentVersion</key>
+	<integer>8</integer>
+	<key>GraphicsList</key>
+	<array>
+		<dict>
+			<key>Bounds</key>
+			<string>{{35, 57}, {297, 24}}</string>
+			<key>Class</key>
+			<string>ShapedGraphic</string>
+			<key>ID</key>
+			<integer>6</integer>
+			<key>Shape</key>
+			<string>Rectangle</string>
+			<key>Style</key>
+			<dict>
+				<key>fill</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+				<key>shadow</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+				<key>stroke</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Bounds</key>
+			<string>{{38, 41}, {219, 301}}</string>
+			<key>Class</key>
+			<string>ShapedGraphic</string>
+			<key>FitText</key>
+			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
+			<key>ID</key>
+			<integer>5</integer>
+			<key>Shape</key>
+			<string>Rectangle</string>
+			<key>Style</key>
+			<dict>
+				<key>fill</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+				<key>shadow</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+				<key>stroke</key>
+				<dict>
+					<key>Draws</key>
+					<string>NO</string>
+				</dict>
+			</dict>
+			<key>Text</key>
+			<dict>
+				<key>Align</key>
+				<integer>0</integer>
+				<key>Pad</key>
+				<integer>0</integer>
+				<key>Text</key>
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fscript\fcharset0 BrushScriptMT;\f2\fnil\fcharset0 Charter-Roman;
+}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\b\fs24 \cf0 \dn2 merge_cfg
+\b0 \dn2 ():\
+    
+\b \dn2 input
+\b0 \dn2 : 
+\i \dn2 Program
+\i0 \dn2  P, 
+\i \dn2 Label
+\i0 \dn2  
+\f1\i\fs28 l
+\f0\i0\fs20 \sub b
+\fs24 \nosupersub  , 
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 1 
+\fs24 \nosupersub , 
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 2
+\fs24 \nosupersub \
+    
+\b \dn2 output
+\b0 \dn2 : 
+\i \dn2 Program
+\i0 \dn2  P'\
+    
+\b \dn2 let 
+\b0 \dn2 r
+\fs18 \dn2 \sub 1
+\fs24 \dn2 \nosupersub  = F(p
+\fs18 \dn2 \sub 11
+\fs24 \dn2 \nosupersub , ..., p
+\fs18 \dn2 \sub 1n
+\fs24 \dn2 \nosupersub ) be at 
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 1
+\fs24 \nosupersub  in P\
+    
+\b \dn2 let 
+\b0 \dn2 r
+\fs18 \dn2 \sub 2
+\fs24 \dn2 \nosupersub  = F(p
+\fs18 \dn2 \sub 21
+\fs24 \dn2 \nosupersub , ..., p
+\fs18 \dn2 \sub 2n
+\fs24 \dn2 \nosupersub ) be at 
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 2
+\fs24 \nosupersub  in P\
+    
+\b \dn2 let 
+\b0 \dn2 p
+\fs18 \dn2 \sub 1
+\fs24 \dn2 \nosupersub  = 
+\f2\i \uc0\u632 
+\f0\i0 (p
+\fs18 \dn2 \sub 11
+\fs24 \dn2 \nosupersub , p
+\fs18 \dn2 \sub 21
+\fs24 \dn2 \nosupersub )\
+    ...\
+    
+\b \dn2 let 
+\b0 \dn2 p
+\fs18 \dn2 \sub n
+\fs24 \dn2 \nosupersub  = 
+\f2\i \uc0\u632 
+\f0\i0 (p
+\fs18 \dn2 \sub 1n
+\fs24 \dn2 \nosupersub , p
+\fs18 \dn2 \sub 2n
+\fs24 \dn2 \nosupersub )\
+    
+\b \dn2 replace
+\b0 \dn2  
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 1
+\fs24 \nosupersub  
+\b \dn2 by
+\b0 \dn2  "goto 
+\f1\i\fs28 l
+\f0\i0\fs20 \sub r
+\fs24 \nosupersub " in P\
+    
+\b \dn2 replace
+\b0 \dn2  
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 2
+\fs24 \nosupersub  
+\b \dn2 by
+\b0 \dn2  "goto 
+\f1\i\fs28 l
+\f0\i0\fs20 \sub r
+\fs24 \nosupersub " in P\
+    
+\b \dn2 create
+\b0 \dn2  "
+\f1\i\fs28 l
+\f0\i0\fs20 \sub r
+\fs24 \nosupersub : p
+\fs20 \sub 1
+\fs24 \nosupersub ; ...; p
+\fs20 \sub n
+\fs24 \nosupersub ; r = F(p
+\fs20 \sub 1
+\fs24 \nosupersub , ..., p
+\fs20 \sub n
+\fs24 \nosupersub );\
+    
+\b \dn2 create
+\b0 \dn2  "
+\f1\i\fs28 l
+\f0\i0\fs20 \sub r+1
+\fs24 \nosupersub : branch equal to 
+\f1\i\fs28 l
+\f0\i0\fs20 \sub b
+\fs24 \nosupersub \
+                targeting 
+\b \dn2 such
+\b0 \dn2 (
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 1
+\fs24 \nosupersub ) and 
+\b \dn2 succ
+\b0 \dn2 (
+\f1\i\fs28 l
+\f0\i0\fs20 \sub 2
+\fs24 \nosupersub )\
+    
+\b \dn2 rename
+\b0 \dn2  every use of r
+\fs20 \sub 1
+\fs24 \nosupersub  to r in P\
+    
+\b \dn2 rename
+\b0 \dn2  every use of r
+\fs20 \sub 2
+\fs24 \nosupersub  to r in P\
+    P' = 
+\b \dn2 strictify_program
+\b0 \dn2 (P)\
+
+\b \dn2     return 
+\b0 \dn2 P'}</string>
+				<key>VerticalPad</key>
+				<integer>0</integer>
+			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
+		</dict>
+	</array>
+	<key>GridInfo</key>
+	<dict/>
+	<key>GuidesLocked</key>
+	<string>NO</string>
+	<key>GuidesVisible</key>
+	<string>YES</string>
+	<key>HPages</key>
+	<integer>1</integer>
+	<key>ImageCounter</key>
+	<integer>1</integer>
+	<key>KeepToScale</key>
+	<false/>
+	<key>Layers</key>
+	<array>
+		<dict>
+			<key>Lock</key>
+			<string>NO</string>
+			<key>Name</key>
+			<string>Layer 1</string>
+			<key>Print</key>
+			<string>YES</string>
+			<key>View</key>
+			<string>YES</string>
+		</dict>
+	</array>
+	<key>LayoutInfo</key>
+	<dict>
+		<key>Animate</key>
+		<string>NO</string>
+		<key>circoMinDist</key>
+		<real>18</real>
+		<key>circoSeparation</key>
+		<real>0.0</real>
+		<key>layoutEngine</key>
+		<string>dot</string>
+		<key>neatoSeparation</key>
+		<real>0.0</real>
+		<key>twopiSeparation</key>
+		<real>0.0</real>
+	</dict>
+	<key>LinksVisible</key>
+	<string>NO</string>
+	<key>MagnetsVisible</key>
+	<string>NO</string>
+	<key>MasterSheets</key>
+	<array/>
+	<key>ModificationDate</key>
+	<string>2015-04-04 23:35:15 +0000</string>
+	<key>Modifier</key>
+	<string>Fernando Magno Quintao Pereira</string>
+	<key>NotesVisible</key>
+	<string>NO</string>
+	<key>Orientation</key>
+	<integer>2</integer>
+	<key>OriginVisible</key>
+	<string>NO</string>
+	<key>PageBreaks</key>
+	<string>YES</string>
+	<key>PrintInfo</key>
+	<dict>
+		<key>NSBottomMargin</key>
+		<array>
+			<string>float</string>
+			<string>41</string>
+		</array>
+		<key>NSHorizonalPagination</key>
+		<array>
+			<string>coded</string>
+			<string>BAtzdHJlYW10eXBlZIHoA4QBQISEhAhOU051bWJlcgCEhAdOU1ZhbHVlAISECE5TT2JqZWN0AIWEASqEhAFxlwCG</string>
+		</array>
+		<key>NSLeftMargin</key>
+		<array>
+			<string>float</string>
+			<string>18</string>
+		</array>
+		<key>NSPaperSize</key>
+		<array>
+			<string>size</string>
+			<string>{595, 842}</string>
+		</array>
+		<key>NSPrintReverseOrientation</key>
+		<array>
+			<string>int</string>
+			<string>0</string>
+		</array>
+		<key>NSRightMargin</key>
+		<array>
+			<string>float</string>
+			<string>18</string>
+		</array>
+		<key>NSTopMargin</key>
+		<array>
+			<string>float</string>
+			<string>18</string>
+		</array>
+	</dict>
+	<key>PrintOnePage</key>
+	<false/>
+	<key>ReadOnly</key>
+	<string>NO</string>
+	<key>RowAlign</key>
+	<integer>1</integer>
+	<key>RowSpacing</key>
+	<real>36</real>
+	<key>SheetTitle</key>
+	<string>Canvas 1</string>
+	<key>SmartAlignmentGuidesActive</key>
+	<string>YES</string>
+	<key>SmartDistanceGuidesActive</key>
+	<string>YES</string>
+	<key>UniqueID</key>
+	<integer>1</integer>
+	<key>UseEntirePage</key>
+	<false/>
+	<key>VPages</key>
+	<integer>1</integer>
+	<key>WindowInfo</key>
+	<dict>
+		<key>CurrentSheet</key>
+		<integer>0</integer>
+		<key>ExpandedCanvases</key>
+		<array>
+			<dict>
+				<key>name</key>
+				<string>Canvas 1</string>
+			</dict>
+		</array>
+		<key>Frame</key>
+		<string>{{453, 88}, {693, 790}}</string>
+		<key>ListView</key>
+		<true/>
+		<key>OutlineWidth</key>
+		<integer>142</integer>
+		<key>RightSidebar</key>
+		<false/>
+		<key>ShowRuler</key>
+		<true/>
+		<key>Sidebar</key>
+		<true/>
+		<key>SidebarWidth</key>
+		<integer>120</integer>
+		<key>VisibleRegion</key>
+		<string>{{0, 0}, {558, 651}}</string>
+		<key>Zoom</key>
+		<real>1</real>
+		<key>ZoomValues</key>
+		<array>
+			<array>
+				<string>Canvas 1</string>
+				<real>1</real>
+				<real>1</real>
+			</array>
+		</array>
+	</dict>
+</dict>
+</plist>
